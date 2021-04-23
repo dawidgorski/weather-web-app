@@ -12,14 +12,16 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class Weather {
+public class WeatherAPI {
 
     String city;
 
-    public Weather(@Value("Warsaw") String city) throws IOException, InterruptedException {
+    public WeatherAPI(@Value("Warsaw") String city) throws IOException, InterruptedException {
         this.city = city;
 
     }
@@ -32,40 +34,50 @@ public class Weather {
         this.city = city;
     }
 
+
+    private HttpResponse<String> configureHTTP(Boolean current) throws IOException, InterruptedException {
+        HttpClient httpClient = HttpClient.newHttpClient();
+        String uri = current?"http://api.weatherbit.io/v2.0/current?key=f5847edaf6ff4abfa8c66bfd33c3cf2e&language=en":"https://api.weatherbit.io/v2.0/forecast/daily?key=f5847edaf6ff4abfa8c66bfd33c3cf2e&days=13";
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(uri + "&city=" + city))
+                .build();
+        return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+    }
+    private JSONObject getJsonObject(HttpResponse<String> response){
+        HttpResponse<String> responseCurrent = response;
+        JSONObject jsonObject = new JSONObject(responseCurrent.body());
+        return jsonObject;
+    }
     //  @Scheduled(fixedRateString = "60000")
     // @Scheduled(cron = "1 * * * * *")
     public String showWeather() throws IOException, InterruptedException, JSONException {
-        HttpClient httpClient = HttpClient.newHttpClient();
-        HttpRequest requestCurrent = HttpRequest.newBuilder()
-                .uri(URI.create("http://api.weatherbit.io/v2.0/current?key=f5847edaf6ff4abfa8c66bfd33c3cf2e&language=en&city=" + city))
-                .build();
-        HttpResponse<String> responseCurrent = httpClient.send(requestCurrent, HttpResponse.BodyHandlers.ofString());
-        JSONObject jsonObjectCurrent = new JSONObject(responseCurrent.body());
-        JSONArray jsonArrayCurrent = jsonObjectCurrent.getJSONArray("data");
-        JSONObject jsonObjectCurrent2 = (JSONObject) jsonArrayCurrent.get(0);
 
-        HttpRequest requestForecast = HttpRequest.newBuilder()
-                .uri(URI.create("https://api.weatherbit.io/v2.0/forecast/daily?key=f5847edaf6ff4abfa8c66bfd33c3cf2e&days=13&city=" + city))
-                .build();
-        HttpResponse<String> responseForecast = httpClient.send(requestForecast, HttpResponse.BodyHandlers.ofString());
-        JSONObject jsonObjectForecast = new JSONObject(responseCurrent.body());
+        HttpResponse<String> responseForecast = configureHTTP(false);
+        JSONObject jsonObjectForecast = getJsonObject(responseForecast);
         JSONArray jsonArrayForecast = jsonObjectForecast.getJSONArray("data");
         int arrayForecastLength = jsonArrayForecast.length();
-        for(int i=0; i<arrayForecastLength;i++){
+        String resultForecast="";
+        List<String> twoWeeksForecast = new ArrayList<>();
+        for( int i=0; i<arrayForecastLength;i++){
             JSONObject jsonObjectForecast2 = (JSONObject) jsonArrayForecast.get(i);
+
+            int temp = jsonObjectForecast2.getInt("temp");
+            double windSpeed = jsonObjectForecast2.getDouble("wind_spd");
+            String windDirection = jsonObjectForecast2.getString("wind_cdir_full");
+            String description = jsonObjectForecast2.getJSONObject("weather").getString("description");
+            String date = jsonObjectForecast2.getString("datetime");
+            double max_temp = jsonObjectForecast2.getDouble("max_temp");
+            double min_temp = jsonObjectForecast2.getDouble("min_temp");
+
+            resultForecast += city + ": " + date + " " + temp + "\u00B0C " + description + ", " + "wind: " + String.format("%.1f", windSpeed*3.6) + " km/h " + windDirection+", mintemp = "+min_temp+", maxtemp = "+max_temp;
+
         }
 
 
 
+        System.out.println(resultForecast);
 
 
-        int temp = jsonObjectCurrent2.getInt("app_temp");
-        double windSpeed = jsonObjectCurrent2.getDouble("wind_spd");
-        String windDirection = jsonObjectCurrent2.getString("wind_cdir_full");
-        String cityName = jsonObjectCurrent2.getString("city_name");
-        String description = jsonObjectCurrent2.getJSONObject("weather").getString("description");
-        String result = cityName + ": " + temp + "\u00B0C " + description + ", " + "wind: " + String.format("%.1f", windSpeed*3.6) + " km/h " + windDirection;
-        System.out.println(result);
-        return result;
+        return resultForecast;
     }
 }

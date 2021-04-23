@@ -50,7 +50,7 @@ public class WeatherAPI {
     }
     //  @Scheduled(fixedRateString = "60000")
     // @Scheduled(cron = "1 * * * * *")
-    public String showWeather() throws IOException, InterruptedException, JSONException {
+    public List<String> showWeather() throws IOException, InterruptedException, JSONException {
 
         HttpResponse<String> responseForecast = configureHTTP(false);
         JSONObject jsonObjectForecast = getJsonObject(responseForecast);
@@ -59,6 +59,7 @@ public class WeatherAPI {
         String resultForecast="";
         List<String> twoWeeksForecast = new ArrayList<>();
         for( int i=0; i<arrayForecastLength;i++){
+            String dailyForecast ="";
             JSONObject jsonObjectForecast2 = (JSONObject) jsonArrayForecast.get(i);
 
             int temp = jsonObjectForecast2.getInt("temp");
@@ -68,16 +69,11 @@ public class WeatherAPI {
             String date = jsonObjectForecast2.getString("datetime");
             double max_temp = jsonObjectForecast2.getDouble("max_temp");
             double min_temp = jsonObjectForecast2.getDouble("min_temp");
-
-            resultForecast += city + ": " + date + " " + temp + "\u00B0C " + description + ", " + "wind: " + String.format("%.1f", windSpeed*3.6) + " km/h " + windDirection+", mintemp = "+min_temp+", maxtemp = "+max_temp;
-
+            dailyForecast = city + ": " + date + " " + temp + "\u00B0C " + description + ", " + "wind: " + String.format("%.1f", windSpeed*3.6) + " km/h " + windDirection+", mintemp = "+min_temp+", maxtemp = "+max_temp;
+            twoWeeksForecast.add(dailyForecast);
+            System.out.println(dailyForecast);
         }
 
-
-
-        System.out.println(resultForecast);
-
-
-        return resultForecast;
+        return twoWeeksForecast;
     }
 }

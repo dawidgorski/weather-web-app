@@ -27,7 +27,11 @@
 <form th:action="@{/change_city}" th:object="${weatherAtr}" method="post">
     <input type="text" value="Warsaw" id="textField" th:field="*{city}">
     <input type="submit" value="change">
-    <p th:text="${weatherAtr.showWeather()}">
+    <br/>
+    <tr th:each ="dailyWeather: ${weatherAtr.showWeather()}">
+        <td th:text="${dailyWeather}"/><br/>
+    </tr>
+<!--   <p th:text="${weatherAtr.showWeather()}">-->
 
 </form>
 <a href="http://onet.pl" target="_blank">

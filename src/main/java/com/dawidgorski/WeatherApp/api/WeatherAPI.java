@@ -21,7 +21,7 @@ public class WeatherAPI {
 
     String city;
 
-    public WeatherAPI(@Value("Warsaw") String city) throws IOException, InterruptedException {
+    public WeatherAPI(@Value("Warsaw") String city) {
         this.city = city;
 
     }
@@ -37,17 +37,19 @@ public class WeatherAPI {
 
     private HttpResponse<String> configureHTTP(Boolean current) throws IOException, InterruptedException {
         HttpClient httpClient = HttpClient.newHttpClient();
-        String uri = current?"http://api.weatherbit.io/v2.0/current?key=f5847edaf6ff4abfa8c66bfd33c3cf2e&language=en":"https://api.weatherbit.io/v2.0/forecast/daily?key=f5847edaf6ff4abfa8c66bfd33c3cf2e&days=13";
+        String uri = current ? "http://api.weatherbit.io/v2.0/current?key=f5847edaf6ff4abfa8c66bfd33c3cf2e&language=en" : "https://api.weatherbit.io/v2.0/forecast/daily?key=f5847edaf6ff4abfa8c66bfd33c3cf2e&days=13";
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(uri + "&city=" + city))
                 .build();
         return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
     }
-    private JSONObject getJsonObject(HttpResponse<String> response){
+
+    private JSONObject getJsonObject(HttpResponse<String> response) throws JSONException {
         HttpResponse<String> responseCurrent = response;
         JSONObject jsonObject = new JSONObject(responseCurrent.body());
         return jsonObject;
     }
+
     //  @Scheduled(fixedRateString = "60000")
     // @Scheduled(cron = "1 * * * * *")
     public List<String> showWeather() throws IOException, InterruptedException, JSONException {
@@ -56,20 +58,36 @@ public class WeatherAPI {
         JSONObject jsonObjectForecast = getJsonObject(responseForecast);
         JSONArray jsonArrayForecast = jsonObjectForecast.getJSONArray("data");
         int arrayForecastLength = jsonArrayForecast.length();
-        String resultForecast="";
         List<String> twoWeeksForecast = new ArrayList<>();
-        for( int i=0; i<arrayForecastLength;i++){
-            String dailyForecast ="";
+
+        String city_name = jsonObjectForecast.getString("city_name");
+        String country_code = jsonObjectForecast.getString("country_code");
+        Double lon = jsonObjectForecast.getDouble("lon");
+        Double lat = jsonObjectForecast.getDouble("lat");
+        StringBuilder header =new StringBuilder();
+        header.append(city_name);
+        header.append(" ");
+        header.append(country_code);
+        header.append(" ");
+        header.append(lon);
+        header.append(" ");
+        header.append(lat);
+        twoWeeksForecast.add(header.toString());
+        for (int i = 0; i < arrayForecastLength; i++) {
+
             JSONObject jsonObjectForecast2 = (JSONObject) jsonArrayForecast.get(i);
 
             int temp = jsonObjectForecast2.getInt("temp");
+            String date = jsonObjectForecast2.getString("datetime");
             double windSpeed = jsonObjectForecast2.getDouble("wind_spd");
             String windDirection = jsonObjectForecast2.getString("wind_cdir_full");
-            String description = jsonObjectForecast2.getJSONObject("weather").getString("description");
-            String date = jsonObjectForecast2.getString("datetime");
             double max_temp = jsonObjectForecast2.getDouble("max_temp");
             double min_temp = jsonObjectForecast2.getDouble("min_temp");
-            dailyForecast = city + ": " + date + " " + temp + "\u00B0C " + description + ", " + "wind: " + String.format("%.1f", windSpeed*3.6) + " km/h " + windDirection+", mintemp = "+min_temp+", maxtemp = "+max_temp;
+
+            String description = jsonObjectForecast2.getJSONObject("weather").getString("description");
+            String icon = jsonObjectForecast2.getJSONObject("weather").getString("icon");
+
+            String dailyForecast = date + " " + temp + "\u00B0C " + description + ", " + icon + ", " + "wind: " + String.format("%.1f", windSpeed * 3.6) + " km/h " + windDirection + ", mintemp = " + min_temp + ", maxtemp = " + max_temp;
             twoWeeksForecast.add(dailyForecast);
             System.out.println(dailyForecast);
         }

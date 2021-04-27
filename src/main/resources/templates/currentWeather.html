@@ -53,6 +53,9 @@
 <!--                </div>-->
                 <div  th:text="${datum.getWeather().getDescription()}"></div>
                 <div  th:text="${datum.getSlp()+' hPa'}"></div>
+                <div  th:text="${datum.getWindCdir()}"></div>
+                <div  th:text="${datum.getWindSpd()+' km/h'}"></div>
+                <div  th:text="${datum.getMinTemp()+' - '+datum.getMaxTemp()+'&#730'+'C'}"></div>
 
 
 

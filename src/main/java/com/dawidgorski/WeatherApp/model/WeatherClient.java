@@ -48,12 +48,32 @@ public class WeatherClient {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("E dd.MM",new Locale("en"));
         return ld.format(dateTimeFormatter);
     }
-
+    private Double formatWindSpd(Datum datum){
+        double scale = Math.pow(10, 1);
+        Double numberRounded = Math.round(datum.getWindSpd()*3.6 * scale) / scale;
+        System.out.println(numberRounded);
+        return numberRounded;
+    }
+    private Double formatMinTemp(Datum datum){
+        double scale = Math.pow(10, 1);
+        Double numberRounded = Math.round(datum.getWindSpd() * scale) / scale;
+        System.out.println(numberRounded);
+        return numberRounded;
+    }
+    private Double formatMaxTemp(Datum datum){
+        double scale = Math.pow(10, 0);
+        Double numberRounded = Math.round(datum.getWindSpd()* scale) / scale;
+        System.out.println(numberRounded);
+        return numberRounded;
+    }
 
     public WeatherForecast setDatumInWeatherForecast(WeatherForecast weatherForecast){
         List<Datum> datumList =weatherForecast.getData();
         for(Datum datum:datumList){
             datum.setDatetime(formatLocalDate(datum));
+            datum.setWindSpd(formatWindSpd(datum));
+            datum.setMinTemp(formatMinTemp(datum));
+            datum.setMaxTemp(formatMaxTemp(datum));
         }
         return weatherForecast;
     }

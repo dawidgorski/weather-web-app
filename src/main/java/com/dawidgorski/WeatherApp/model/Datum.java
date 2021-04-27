@@ -118,7 +118,7 @@ public class Datum {
     @JsonProperty("low_temp")
     private Double lowTemp;
     @JsonProperty("max_temp")
-    private Double maxTemp;
+    private int maxTemp;
     @JsonProperty("moonset_ts")
     private Integer moonsetTs;
     @JsonProperty("datetime")
@@ -126,7 +126,7 @@ public class Datum {
     @JsonProperty("temp")
     private Integer temp;
     @JsonProperty("min_temp")
-    private Double minTemp;
+    private int minTemp;
     @JsonProperty("clouds_mid")
     private Integer cloudsMid;
     @JsonProperty("clouds_low")
@@ -445,12 +445,12 @@ public class Datum {
     }
 
     @JsonProperty("max_temp")
-    public Double getMaxTemp() {
+    public int getMaxTemp() {
         return maxTemp;
     }
 
     @JsonProperty("max_temp")
-    public void setMaxTemp(Double maxTemp) {
+    public void setMaxTemp(int maxTemp) {
         this.maxTemp = maxTemp;
     }
 
@@ -485,12 +485,12 @@ public class Datum {
     }
 
     @JsonProperty("min_temp")
-    public Double getMinTemp() {
+    public int getMinTemp() {
         return minTemp;
     }
 
     @JsonProperty("min_temp")
-    public void setMinTemp(Double minTemp) {
+    public void setMinTemp(int minTemp) {
         this.minTemp = minTemp;
     }
 

@@ -1,19 +1,19 @@
-package com.dawidgorski.WeatherApp.model;
+package com.dawidgorski.WeatherApp.app;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
 import java.io.IOException;
 
 @SpringBootApplication
 //@EnableScheduling
-//@ComponentScan(basePackages = "com.dawidgorski.WeatherApp.api")
+@ComponentScan(basePackages = "com.dawidgorski.WeatherApp")
 public class WeatherAppApplication {
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) {
 
         SpringApplication.run(WeatherAppApplication.class, args);
-        //  Weather weather =new Weather("Kozienice");
     }
 
 }

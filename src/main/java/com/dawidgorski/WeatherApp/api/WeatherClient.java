@@ -1,5 +1,7 @@
-package com.dawidgorski.WeatherApp.model;
+package com.dawidgorski.WeatherApp.api;
 
+import com.dawidgorski.WeatherApp.model.Datum;
+import com.dawidgorski.WeatherApp.model.WeatherForecast;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -50,27 +52,16 @@ public class WeatherClient {
     }
     private Double formatWindSpd(Datum datum){
         double scale = Math.pow(10, 1);
-        Double numberRounded = Math.round(datum.getWindSpd()*3.6 * scale) / scale;
-        return numberRounded;
+        return Math.round(datum.getWindSpd()*3.6 * scale) / scale;
     }
-    private Double formatMinTemp(Datum datum){
-        double scale = Math.pow(10, 1);
-        Double numberRounded = Math.round(datum.getMinTemp() * scale) / scale;
-        return numberRounded;
-    }
-    private Double formatMaxTemp(Datum datum){
-        double scale = Math.pow(10, 0);
-        Double numberRounded = Math.round(datum.getMaxTemp()* scale) / scale;
-        return numberRounded;
-    }
+
+
 
     public WeatherForecast setDatumInWeatherForecast(WeatherForecast weatherForecast){
         List<Datum> datumList =weatherForecast.getData();
         for(Datum datum:datumList){
             datum.setDatetime(formatLocalDate(datum));
             datum.setWindSpd(formatWindSpd(datum));
-            datum.setMinTemp(formatMinTemp(datum));
-            datum.setMaxTemp(formatMaxTemp(datum));
         }
         return weatherForecast;
     }
@@ -84,8 +75,7 @@ public class WeatherClient {
                 HttpMethod.GET,
                 HttpEntity.EMPTY,
                 WeatherForecast.class);
-        WeatherForecast weatherForecast = exchange.getBody();
-        return setDatumInWeatherForecast(weatherForecast);
+        return setDatumInWeatherForecast(exchange.getBody());
 
     }
 }

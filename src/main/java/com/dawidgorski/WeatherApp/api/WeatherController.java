@@ -20,11 +20,6 @@ public class WeatherController {
         return "currentWeather";
     }
 
-    @GetMapping("/form")
-    public void showForm() {
-
-    }
-
     @PostMapping("/change_city")
     public String changeCity(@ModelAttribute WeatherClient weatherClient) {
         this.weatherClient.setCity(weatherClient.getCity());

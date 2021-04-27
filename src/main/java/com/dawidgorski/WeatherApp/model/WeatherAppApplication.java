@@ -1,4 +1,4 @@
-package com.dawidgorski.WeatherApp;
+package com.dawidgorski.WeatherApp.model;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,4 @@
-package com.dawidgorski.WeatherApp;
+package com.dawidgorski.WeatherApp.model;
 
 import com.dawidgorski.WeatherApp.api.WeatherAPI;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +13,11 @@ import java.io.IOException;
 @Controller
 public class WeatherController {
     @Autowired
-    WeatherAPI weatherAPI;
+    WeatherClient weatherClient;
 
     @GetMapping("/weather")
     public String getWeather(Model model) throws IOException, InterruptedException {
-        model.addAttribute("weatherAtr", weatherAPI);
+        model.addAttribute("weatherAtr", weatherClient);
         return "currentWeather";
     }
 
@@ -27,8 +27,8 @@ public class WeatherController {
     }
 
     @PostMapping("/change_city")
-    public String changeCity(@ModelAttribute WeatherAPI weatherAPI) throws IOException, InterruptedException {
-        this.weatherAPI.setCity(weatherAPI.getCity());
+    public String changeCity(@ModelAttribute WeatherClient weatherClient) throws IOException, InterruptedException {
+        this.weatherClient.setCity(weatherClient.getCity());
         return "redirect:/weather";
     }
 }

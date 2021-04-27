@@ -90,7 +90,7 @@ public class Datum {
     @JsonProperty("wind_cdir_full")
     private String windCdirFull;
     @JsonProperty("slp")
-    private Double slp;
+    private int slp;
     @JsonProperty("moon_phase_lunation")
     private Double moonPhaseLunation;
     @JsonProperty("valid_date")
@@ -305,12 +305,12 @@ public class Datum {
     }
 
     @JsonProperty("slp")
-    public Double getSlp() {
+    public int getSlp() {
         return slp;
     }
 
     @JsonProperty("slp")
-    public void setSlp(Double slp) {
+    public void setSlp(int slp) {
         this.slp = slp;
     }
 

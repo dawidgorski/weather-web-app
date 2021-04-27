@@ -18,7 +18,7 @@
         }
         #forecastData
         {
-        width: 100px;
+        width: 105px;
         float:left;
         text-align: center;
         }
@@ -52,7 +52,7 @@
 <!--                <div> <img th:src="@{${'templates/img/' + datum.getWeather().getIcon() + '.png'}}" alt="can't find image"/>-->
 <!--                </div>-->
                 <div  th:text="${datum.getWeather().getDescription()}"></div>
-<!--                <div  th:text="${datum.getSlp()+' hPa'}"></div>-->
+                <div  th:text="${datum.getSlp()+' hPa'}"></div>
 
 
 

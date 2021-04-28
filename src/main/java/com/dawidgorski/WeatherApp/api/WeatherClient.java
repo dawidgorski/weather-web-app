@@ -3,8 +3,6 @@ package com.dawidgorski.WeatherApp.api;
 import com.dawidgorski.WeatherApp.model.Datum;
 import com.dawidgorski.WeatherApp.model.WeatherForecast;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;

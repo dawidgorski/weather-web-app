@@ -1,14 +1,10 @@
-package com.dawidgorski.WeatherApp.app;
+package com.dawidgorski.WeatherApp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
-import java.io.IOException;
-
 @SpringBootApplication
-//@EnableScheduling
-@ComponentScan(basePackages = "com.dawidgorski.WeatherApp")
 public class WeatherAppApplication {
 
     public static void main(String[] args) {

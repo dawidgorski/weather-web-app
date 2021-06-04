@@ -16,11 +16,11 @@ import java.util.List;
 import java.util.Locale;
 
 @Service
-public class WeatherClient {
+public class WeatherService {
     String city;
     List<String> forecastList;
 
-    public WeatherClient(@Value("Warsaw") String city) {
+    public WeatherService(@Value("Warsaw") String city) {
         this.city = city;
     }
 
@@ -42,27 +42,28 @@ public class WeatherClient {
         }
         return forecastList;
     }
-    private String formatLocalDate(Datum datum){
+
+    private String formatLocalDate(Datum datum) {
         String[] localDateArray = datum.getDatetime().split("-");
-        LocalDate ld =LocalDate.of(Integer.parseInt(localDateArray[0]),Integer.parseInt(localDateArray[1]),Integer.parseInt(localDateArray[2]));
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("E dd.MM",new Locale("en"));
+        LocalDate ld = LocalDate.of(Integer.parseInt(localDateArray[0]), Integer.parseInt(localDateArray[1]), Integer.parseInt(localDateArray[2]));
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("E dd.MM", new Locale("en"));
         return ld.format(dateTimeFormatter);
     }
-    private Double formatWindSpd(Datum datum){
+
+    private Double formatWindSpd(Datum datum) {
         double scale = Math.pow(10, 1);
-        return Math.round(datum.getWindSpd()*3.6 * scale) / scale;
+        return Math.round(datum.getWindSpd() * 3.6 * scale) / scale;
     }
 
-
-
-    public WeatherForecast setDatumInWeatherForecast(WeatherForecast weatherForecast){
-        List<Datum> datumList =weatherForecast.getData();
-        for(Datum datum:datumList){
+    public WeatherForecast setDatumInWeatherForecast(WeatherForecast weatherForecast) {
+        List<Datum> datumList = weatherForecast.getData();
+        for (Datum datum : datumList) {
             datum.setDatetime(formatLocalDate(datum));
             datum.setWindSpd(formatWindSpd(datum));
         }
         return weatherForecast;
     }
+
     public List<Datum> getForecastDatum() {
         return getWeatherForecast().getData();
     }
@@ -74,6 +75,5 @@ public class WeatherClient {
                 HttpEntity.EMPTY,
                 WeatherForecast.class);
         return setDatumInWeatherForecast(exchange.getBody());
-
     }
 }

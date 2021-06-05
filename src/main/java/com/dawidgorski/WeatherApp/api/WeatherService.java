@@ -32,17 +32,6 @@ public class WeatherService {
         this.city = city;
     }
 
-    public List<String> getForecastStringList() {
-        List<Datum> listDatum = getForecastDatum();
-        forecastList = new ArrayList<>();
-        for (Datum datum : listDatum) {
-
-            String dailyForecast = datum.getDatetime() + " " + datum.getTemp() + "\u00B0C " + datum.getWeather().getDescription() + ", " + datum.getWeather().getIcon() + ", " + "wind: " + String.format("%.1f", datum.getWindSpd() * 3.6) + " km/h " + datum.getWindCdir() + ", mintemp = " + datum.getMinTemp() + ", maxtemp = " + datum.getMaxTemp();
-            forecastList.add(dailyForecast);
-        }
-        return forecastList;
-    }
-
     private String formatLocalDate(Datum datum) {
         String[] localDateArray = datum.getDatetime().split("-");
         LocalDate ld = LocalDate.of(Integer.parseInt(localDateArray[0]), Integer.parseInt(localDateArray[1]), Integer.parseInt(localDateArray[2]));

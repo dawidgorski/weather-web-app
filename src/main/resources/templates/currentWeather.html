@@ -9,7 +9,7 @@
         margin-left:auto;
         margin-right:auto;
         }
-        #logo
+        #header
         {
         background-color: black;
         color: white;
@@ -34,16 +34,19 @@
 </head>
 <body>
 <div id="container">
-    <div id="logo">
+    <div id="header">
         <h1>Weather forecast</h1>
     </div>
+
 
     <form th:action="@{/change_city}" th:object="${weatherAtr}" method="post">
         <input type="text" id="textField" th:field="*{city}">
         <input type="submit" value="change">
         <br/>
+        <h2><div  th:text="${weatherAtr.getWeatherForecast().getCityName()}"></div></h2>
         <br/>
         <div id="forecastData" th:each="datum: ${weatherAtr.getForecastDatum()}">
+
             <div id="day" >
                 <div  th:text="${datum.getDatetime()}"></div>
                 <div  th:text="${datum.getTemp()}+'&#730'+'C'"></div>

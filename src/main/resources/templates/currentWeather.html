@@ -1,79 +1,57 @@
 <!DOCTYPE html>
 <html xmlns:th="http//www.thymeleaf.org" lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Weather API</title>
-    <style>
-        #container{
-        width: 1366px;
-        margin-left:auto;
-        margin-right:auto;
-        }
-        #header
-        {
-        background-color: black;
-        color: white;
-        text-align: center;
-        padding: 15px;
-        }
-        #forecastData
-        {
-        width: 105px;
-        float:left;
-        text-align: center;
-        }
-        #day
-        {
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8">
+    <link rel="stylesheet" href="./style2.css">
 
-        }
-        #footer
-        {
-        clear:both;
-        }
+    <title>Weather API</title>
+
+    <style>
+
     </style>
 </head>
 <body>
-<div id="container">
-    <div id="header">
-        <h1>Weather forecast</h1>
-    </div>
+<main>
+    <section>
+        <div class="container">
+            <header>
+                <h1>Weather forecast</h1>
+            </header>
 
+            <form th:action="@{/change_city}" th:object="${weatherAtr}" method="post">
+                <div class="enter_city_bar">
+                    <label>Enter city name:</label>
+                    <div class="entering_set">
+                        <input type="text" id="textField" th:field="*{city}">
+                        <input type="submit" value="change">
+                    </div>
 
-    <form th:action="@{/change_city}" th:object="${weatherAtr}" method="post">
-        <input type="text" id="textField" th:field="*{city}">
-        <input type="submit" value="change">
-        <br/>
-        <h2><div  th:text="${weatherAtr.getWeatherForecast().getCityName()}"></div></h2>
-        <br/>
-        <div id="forecastData" th:each="datum: ${weatherAtr.getForecastDatum()}">
-
-            <div id="day" >
-                <div  th:text="${datum.getDatetime()}"></div>
-                <div  th:text="${datum.getTemp()}+'&#730'+'C'"></div>
-                <div> <img th:src="@{${'https://www.weatherbit.io/static/img/icons/' + datum.getWeather().getIcon() + '.png'}}" alt="can't find image" width="100" height="100"/>
                 </div>
-<!--                <div> <img th:src="@{${'templates/img/' + datum.getWeather().getIcon() + '.png'}}" alt="can't find image"/>-->
-<!--                </div>-->
-                <div  th:text="${datum.getWeather().getDescription()}"></div>
-                <div  th:text="${datum.getSlp()+' hPa'}"></div>
-                <div  th:text="${datum.getWindCdir()}"></div>
-                <div  th:text="${datum.getWindSpd()+' km/h'}"></div>
-                <div  th:text="${datum.getMinTemp()+' - '+datum.getMaxTemp()+'&#730'+'C'}"></div>
 
+                <div th:each=" datum : ${weatherAtr.getForecastDatum()}">
 
+                    <div class="days">
+                        <div class="date" th:text="${datum.getDatetime()}"></div>
+                        <div th:text="${datum.getTemp()}+'&#730'+'C'"></div>
+                        <div><img
+                                th:src="${'https://www.weatherbit.io/static/img/icons/' + datum.getWeather().getIcon() + '.png'}"
+                                alt="can't find image" width="100" height="100"/>
+                        </div>
+                        <div th:text="${datum.getWeather().getDescription()}"></div>
+                        <div th:text="${datum.getSlp()+' hPa'}"></div>
+                        <div th:text="${datum.getWindCdir()}"></div>
+                        <div th:text="${datum.getWindSpd()+' km/h'}"></div>
+                        <div th:text="${datum.getMinTemp()+' - '+datum.getMaxTemp()+'&#730'+'C'}"></div>
+                    </div>
+                </div>
+            </form>
 
-
-            </div>
+            <footer>
+                <a href="https://www.weatherbit.io" target="_blank"></a>
+            </footer>
         </div>
-
-
-    </form>
-
-    <div id="footer">
-        <a href="http://onet.pl" target="_blank">
-<!--                                   <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAATUAAACjCAMAAADciXncAAAAtFBMVEX/////0gAeHh4AAAD/0AAXFxfS0tIICAgbGxv29vbw8PBKSkqfn5+Pj48ZGRkNDQ3e3t5/f3+7u7uoqKgnJyfk5OSRkZFnZ2c1NTVCQkL/+N3//vj/5IJ0dHTFxcXc3Nx8fHyHh4c4ODj/5o3/8b7/4naZmZn//O5fX1//66QtLS1SUlKzs7PJycn/9dH/1Rv/6JP/7an/+eP/20r/3V7/2Dv/3FL/1zL/4Gn/7rL//PD/8cJgubCSAAAF8klEQVR4nO2baXuiOhiGkRcErUJdcGlH1Gm11rp0nU7n/P//dSAJEFBQPOfSzNXn/jKVmFdyT/aApgEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANTm5v7xLuD5ZfN66Vv5S3h9fKsYAZUK+2c7u7+99C0pz/0H8yVjVGY3l74tpfnaZpUJce/wlsfmY78z5u3Hpe9OUZ7znYXatpuL3VntYr98iNtfhdJCby+XuC9vNVrOL/HDx/CQ06OltN2d+678fpfIpca5f/dIHrYHnV2ic2uSreu6qtZuj5J2/trWtHSFrX0cJy3Q9nXW+1La2o/DfVqs7axLLJWtbY6XVql8nvPOegpbO7JTE5XtMSeK1+gviaxhqy1Pr2rj65DwT386dIkGLX8373i+6IZ5p1JakNFruaE1t+mxIPX/r8j/nccyVS3Qtncxv74Kpgi2rdtOYGaSlK9KIbqmzS1ynWBEDNKX63Te1YDIDJJs0yWrFzkP8zFpgTYWRK0qV8rZ/nG0tiBTT7CSAlYp+OwMvQGbQ3Acakp5vSE5SVabbOGU9AxKWXspV9UCdkKMdTddQJv6IolZs5dLMy0gme37ZGbzcjtqW/ssK21nZTW2zGwJdXriacyabtvZ5LHI61M2KUjshClKW7spXdUqb+kIdT2WZid6aMQSq0nhbddyo7ZoCqleJM20wm5MfKCqpri1u/LWjIdUhL5ong7RcqCTFRWyHSbG1mzq9puTuA8jj+W9MkXWYW/V7oxcHspZanw0EP8dpnKjwVtpaZkFwlp4ocEqGDpr11NRVlb02JrjsmanVbuOVHHaPNXsihGg3qe4jTY6nc6ChTL7nZBG9axiirgtL61SmckRnky5RQZ4ouunlRZbc3QvSuXN0GXDxZB90+kmM5URq6p2l39SdZZbal0Q8SEF8LgWt59cqnMx5pUWW6OknvBVkvMz+PN6J1HTurZ0SdUV1dcp1uS5R4cPkiQvCETDo3pkjQkUiFFVj/OaC/mGVuya1WMfVLVWvO2dg/EnCcDHAneaimrZ0Xiwa63OrZlJ3klbosOuiTFWVWuzU6qaIZ1YDVjvTulF0sSNSltoTYygYsEk0OOqqK613ydZkw5e+AyNvFTUedzMCq39lJZSaWyLffd7WWtwa01Yy7EmxrxxKqoo7fyAtWG+NVOOo5y1Etu4kjVpQ5dP1/jSMYbrCCdshdYW+/o1zoB9V1Vr5Xc8QmtSAD4RdYZyUDGHCytgoTUuxR1ptV3Yd1W1dn+Kta0UQCyo2EIggtc/NsEvtOaLvLln66paezjF2rscgXds8txjymVY4Ryu0FpN56sreZqbGlZ4RbbUO3svdWjAMZ7lAA0xw6I5rzLXi2g5HwootBb5pUW8EG3TVTUb2+4q96DHCYOokXpOptaNNn/cfq8xfYo2+4ktF4qtiRWr7rrTdb1W89pPZJvUj+vbSuyJ2JNOZz5qn8fIMZzSsaUj+PEWmmuRG+1QmktWQYqtRVqCrHzoNPmY2hJ1z5OSrcw4fVFO2CrKPu0x39l2DRssn8EdsKZN9uQN6lbUYofS3rpK1sqvRI2d5yZ7O0U3o92fQ9a00a42V4+7OV9KVcraa9km+rYbY0XpQyoaRF3TQWtBj5/Oa9OVdFw8TbQpZa3seGDse2ay3icrPkmRd/ir5AaQNAmusysWxRe8RZI3zJyW0+AnzKFNpayVrGy/9kfxmgOxGHqSS+eNWgGTXnKlxq60WvKXesNoJbWQZ8uMemPBhoplf51NuiiljqkyB1Qy9arv++Pc5EJq47Xvr69zk5WbsZU6SM59OOb7cXwbNd4PR/s2HD3V/cTbQRJHPo21ze/UviVHaYO0LIcPRo2PP4fDfDc2B97TMGaHY3xDbn8XaDMq531m/i9i85nnzZhh8Mznfp83w5jhRe5iNj8q8tvIhmF8vKCeHcHNy0y8+r59v/sHygAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHB5/gV0UFy87FCDJwAAAABJRU5ErkJggg=="/>-->
-        </a>
-    </div>
-</div>
+    </section>
+</main>
 </body>
+
 </html>

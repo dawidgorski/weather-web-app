@@ -59,7 +59,7 @@ public class WeatherService {
 
     public WeatherForecast getWeatherForecast() {
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<WeatherForecast> exchange = restTemplate.exchange("https://api.weatherbit.io/v2.0/forecast/daily?key=f5847edaf6ff4abfa8c66bfd33c3cf2e&days=14&lang=en&city=" + city,
+        ResponseEntity<WeatherForecast> exchange = restTemplate.exchange("https://api.weatherbit.io/v2.0/forecast/daily?key=f0a8778c87134c91aa0bc61fda32c3ad&days=14&lang=en&city=" + city,
                 HttpMethod.GET,
                 HttpEntity.EMPTY,
                 WeatherForecast.class);
